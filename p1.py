@@ -1,6 +1,6 @@
-__import__('pysqlite3')
-import sys
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+# __import__('pysqlite3')
+# import sys
+# sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 # ---------------------------------------------------
 
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -10,24 +10,29 @@ from langchain.chat_models import ChatOpenAI
 import streamlit as st
 import time
 import os
+from dotenv import load_dotenv
+load_dotenv()
+import os
+api_key = os.getenv('OPENAI_API_KEY')
 
+#openai.api_key = os.environ["OPENAI_API_KEY"]
 # 첫번째 구현 방법: 자신의 OpenAI API key로 돌려도 된다면 
 # 여기서 자신의 OpenAI api key를 넣고 주석을 없애주세요
 # ---------------------------------------------------
-# os.environ["OPENAI_API_KEY"] ="내 api key"
+os.environ["OPENAI_API_KEY"] = api_key
 # ---------------------------------------------------
 
 
 # 두번째 구현 방법: 사용자의 api key 받아서 돌리기
 # ---------------------------------------------------
-openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
+# openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
 
-if not openai_api_key:
-    st.info("OpenAI API를 먼저 입력해주세요.  ")
-    st.stop()
+# if not openai_api_key:
+#     st.info("OpenAI API를 먼저 입력해주세요.  ")
+#     st.stop()
 
-import os
-os.environ["OPENAI_API_KEY"] = openai_api_key
+# import os
+# os.environ["OPENAI_API_KEY"] = openai_api_key
 # ---------------------------------------------------
 
 
