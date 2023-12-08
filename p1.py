@@ -38,11 +38,11 @@ llm = ChatOpenAI(temperature=0.2)
 
 # 첫번째 구현 방법: 웹사이트 url 학습시키기
 # ---------------------------------------------------
-from langchain.document_loaders import WebBaseLoader
+# from langchain.document_loaders import WebBaseLoader
 
-loader = WebBaseLoader("https://dalpha.so/ko/howtouse?scrollTo=custom")
-data = loader.load()
-# ---------------------------------------------------
+# loader = WebBaseLoader("https://dalpha.so/ko/howtouse?scrollTo=custom")
+# data = loader.load()
+# # ---------------------------------------------------
 
 
 # 두번째 구현 방법: pdf 학습시키기
@@ -63,12 +63,10 @@ data = loader.load()
 # 세번째 구현 방법: csv 학습시키기
 # 먼저 VSCode에서 만든 이 폴더 내에 csv 파일을 업로드 해주셔야해요!
 # 사용하고 싶으면 아래 부분의 코드 주석을 없애주세요
-# ---------------------------------------------------
-# from langchain.document_loaders.csv_loader import CSVLoader
+from langchain.document_loaders.csv_loader import CSVLoader
 
-# loader = CSVLoader(file_path='파일이름.csv')
-# data = loader.load()
-# ---------------------------------------------------
+loader = CSVLoader(file_path='all-in-1-file.csv')
+data = loader.load()
 
 # 올린 파일 내용 쪼개기
 text_splitter = RecursiveCharacterTextSplitter(chunk_size = 1000, chunk_overlap = 0)
@@ -106,11 +104,11 @@ from langchain.prompts import MessagesPlaceholder
 # AI 에이전트가 사용할 프롬프트 짜주기
 system_message = SystemMessage(
     content=(
-        "You are a nice customer service agent."
-        "Do your best to answer the questions."
+        "You are a agent that converts long reading materials into easy read documents for people with learning disabilities"
+        "Do your best to convert the material"
         "Feel free to use any tools available to look up "
-        "relevant information, only if necessary"
-        "Do not generate false answers to questions that are not related to the customer service guide."
+        "relevant information and instructions, only if necessary"
+        "Do not generate false answers to questions."
         "If you don't know the answer, just say that you don't know. Don't try to make up an answer."
         "Make sure to answer in Korean."
     )
@@ -136,7 +134,7 @@ agent_executor = AgentExecutor(
 )
 
 # 웹사이트 제목
-st.title("AI 상담원")
+st.title("읽기 쉬운 자료 서비스")
 
 if "openai_model" not in st.session_state:
     st.session_state["openai_model"] = "gpt-3.5-turbo"
