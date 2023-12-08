@@ -1,0 +1,9 @@
+openai
+langchain
+tiktoken 
+faiss-cpu 
+streamlit 
+chromadb 
+bs4
+pypdf
+pysqlite3-binary
