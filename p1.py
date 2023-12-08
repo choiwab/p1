@@ -23,7 +23,7 @@ import os
 openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
 
 if not openai_api_key:
-    st.info("OpenAI API를 먼저 입력해주세요.")
+    st.info("OpenAI API를 먼저 입력해주세요.  ")
     st.stop()
 
 import os
