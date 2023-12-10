@@ -16,15 +16,11 @@ import os
 api_key = os.getenv('OPENAI_API_KEY')
 
 #openai.api_key = os.environ["OPENAI_API_KEY"]
-# 첫번째 구현 방법: 자신의 OpenAI API key로 돌려도 된다면 
-# 여기서 자신의 OpenAI api key를 넣고 주석을 없애주세요
-# ---------------------------------------------------
+
 os.environ["OPENAI_API_KEY"] = api_key
-# ---------------------------------------------------
 
 
-# 두번째 구현 방법: 사용자의 api key 받아서 돌리기
-# ---------------------------------------------------
+#사용자의 api key 받아서 돌리기
 # openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
 
 # if not openai_api_key:
@@ -33,27 +29,20 @@ os.environ["OPENAI_API_KEY"] = api_key
 
 # import os
 # os.environ["OPENAI_API_KEY"] = openai_api_key
-# ---------------------------------------------------
 
 
 # temperature는 0에 가까워질수록 형식적인 답변을 내뱉고, 1에 가까워질수록 창의적인 답변을 내뱉음
 llm = ChatOpenAI(temperature=0.2)
 
-# 어떤 파일을 학습시키는지에 따라 코드를 바꿔주세요. ex) pdf, html, csv
 
-# 첫번째 구현 방법: 웹사이트 url 학습시키기
-# ---------------------------------------------------
+# url 학습시키기
 # from langchain.document_loaders import WebBaseLoader
 
 # loader = WebBaseLoader("https://dalpha.so/ko/howtouse?scrollTo=custom")
 # data = loader.load()
-# # ---------------------------------------------------
 
 
-# 두번째 구현 방법: pdf 학습시키기
-# 먼저 VSCode에서 만든 이 폴더 내에 pdf 파일을 업로드 해주셔야해요!
-# 사용하고 싶으면 아래 부분의 코드 주석을 없애주세요
-# ---------------------------------------------------
+# pdf 학습시키기
 # from langchain.document_loaders import PyPDFLoader
 
 # loader = PyPDFLoader("파일이름.pdf")
@@ -62,15 +51,12 @@ llm = ChatOpenAI(temperature=0.2)
 # data = []
 # for content in pages:
 #     data.append(content)
-# ---------------------------------------------------
 
 
-# 세번째 구현 방법: csv 학습시키기
-# 먼저 VSCode에서 만든 이 폴더 내에 csv 파일을 업로드 해주셔야해요!
-# 사용하고 싶으면 아래 부분의 코드 주석을 없애주세요
+#csv 학습시키기
 from langchain.document_loaders.csv_loader import CSVLoader
 
-loader = CSVLoader(file_path='all-in-1-file.csv')
+loader = CSVLoader(file_path='instructions.csv')
 data = loader.load()
 
 # 올린 파일 내용 쪼개기
@@ -109,13 +95,14 @@ from langchain.prompts import MessagesPlaceholder
 # AI 에이전트가 사용할 프롬프트 짜주기
 system_message = SystemMessage(
     content=(
-        "You are a agent that converts long reading materials into easy read documents for people with learning disabilities"
+        "You are a agent that converts long reading materials into easy read images for people with learning disabilities"
         "Do your best to convert the material"
         "Feel free to use any tools available to look up "
-        "relevant information and instructions, only if necessary"
-        "Do not generate false answers to questions."
-        "If you don't know the answer, just say that you don't know. Don't try to make up an answer."
-        "Make sure to answer in Korean."
+        "relevant information and instructions"
+        "Please make sure to generate an image incorporated with text"
+        #"Do not generate false answers to questions."
+        #"If you don't know the answer, just say that you don't know. Don't try to make up an answer."
+        #"Make sure to answer in Korean."
     )
 )
 
@@ -142,7 +129,7 @@ agent_executor = AgentExecutor(
 st.title("읽기 쉬운 자료 서비스")
 
 if "openai_model" not in st.session_state:
-    st.session_state["openai_model"] = "gpt-3.5-turbo"
+    st.session_state["openai_model"] = "dall-e-3"
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -152,7 +139,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # 웹사이트에서 유저의 인풋을 받고 위에서 만든 AI 에이전트 실행시켜서 답변 받기
-if prompt := st.chat_input("Dalpha AI store는 어떻게 사용하나요?"):
+if prompt := st.chat_input("읽기쉬운 자료로 변환할 문서를 입력해주세요"):
 
 # 유저가 보낸 질문이면 유저 아이콘과 질문 보여주기
     st.session_state.messages.append({"role": "user", "content": prompt})
